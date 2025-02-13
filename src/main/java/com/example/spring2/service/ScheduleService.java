@@ -3,7 +3,9 @@ package com.example.spring2.service;
 import com.example.spring2.dto.ScheduleRequestDto;
 import com.example.spring2.dto.ScheduleResponseDto;
 import com.example.spring2.entity.Schedule;
+import com.example.spring2.entity.User;
 import com.example.spring2.repository.ScheduleRepository;
+import com.example.spring2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +18,15 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ScheduleResponseDto save(ScheduleRequestDto dto) {
-        Schedule schedule = new Schedule(dto.getTitle(), dto.getTask());
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(
+                () -> new IllegalStateException("존재하지않는 user입니다")
+        );
+
+        Schedule schedule = new Schedule(dto.getTitle(), dto.getTask(), user);
         Schedule savedschedule = scheduleRepository.save(schedule);
 
         return new ScheduleResponseDto(savedschedule.getId(), savedschedule.getTitle(), savedschedule.getTask());

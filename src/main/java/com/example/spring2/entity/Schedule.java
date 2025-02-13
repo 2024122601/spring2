@@ -1,9 +1,6 @@
 package com.example.spring2.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,9 +13,14 @@ public class Schedule {
     private String title;
     private String task;
 
-    public Schedule(String title, String task) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user id", nullable = false)
+    private User user;
+
+    public Schedule(String title, String task, User user) {
         this.title = title;
         this.task = task;
+        this.user = user;
     }
 
     public void update(String title, String task) {
