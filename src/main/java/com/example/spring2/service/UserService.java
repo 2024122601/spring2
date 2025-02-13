@@ -19,10 +19,10 @@ public class UserService {
 
     @Transactional
     public UserResponseDto save(UserRequestDto dto) {
-        User user = new User(dto.getName(), dto.getEmail());
+        User user = new User(dto.getName(), dto.getEmail(), dto.getPassword());
         User savedUser = userRepository.save(user);
 
-        return new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
+        return new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getPassword());
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +31,7 @@ public class UserService {
 
         List<UserResponseDto> dtos = new ArrayList<>();
         for (User user : users) {
-            UserResponseDto dto = new UserResponseDto(user.getId(), user.getName(),user.getEmail());
+            UserResponseDto dto = new UserResponseDto(user.getId(), user.getName(),user.getEmail(), user.getPassword());
             dtos.add(dto);
         }
         return dtos;
@@ -43,7 +43,7 @@ public class UserService {
                 () -> new IllegalArgumentException("그 id 유저 없음")
         );
 
-        return new UserResponseDto(user.getId(), user.getName(),user.getEmail());
+        return new UserResponseDto(user.getId(), user.getName(),user.getEmail(), user.getPassword());
     }
 
     @Transactional
@@ -52,8 +52,8 @@ public class UserService {
                 () -> new IllegalArgumentException("그 id 유저 없음")
         );
 
-        user.update(dto.getName(), dto.getEmail());
-        return new UserResponseDto(user.getId(), user.getName(), user.getEmail());
+        user.update(dto.getName(), dto.getEmail(), dto.getPassword());
+        return new UserResponseDto(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
     @Transactional
     public void deleteById(Long id) {
